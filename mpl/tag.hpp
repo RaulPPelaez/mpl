@@ -11,6 +11,7 @@ namespace mpl {
   class tag {
   private:
     int t=0;
+    static int current_unique_tag;
   public:
     tag()=default;
 
@@ -27,10 +28,19 @@ namespace mpl {
       return t;
     }
 
+    static inline tag next_unique_tag(){
+      if(current_unique_tag >= static_cast<int>(tag::up()) or current_unique_tag < 0)
+	current_unique_tag = -1;
+      else
+	current_unique_tag++;
+      return tag(current_unique_tag);
+    }
+
     static inline tag up();
 
     static inline tag any();
   };
+  int tag::current_unique_tag = 0;
 
   inline bool operator==(tag t1, tag t2) {
     return static_cast<int>(t1)==static_cast<int>(t2);
